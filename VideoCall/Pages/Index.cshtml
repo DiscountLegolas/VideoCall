@@ -1,0 +1,20 @@
+﻿@page "Chat/{room}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@section Scripts {
+    <script src="~/js/unpkg.com_peerjs@1.5.0_dist_peerjs.min.js"></script>
+    <script src="~/js/room.js" asp-append-version="true"></script>
+}
+<div id="videos">
+
+</div>
+<div id="controls">
+    <div class="control" id="camera">
+        <img src="~/lib/photo-camera-svgrepo-com.svg" class="camera-pic" alt="camera" />
+    </div>
+    <div class="control" id="mic">
+        <img src="~/lib/microphone-svgrepo-com.svg" class="mic-pic" alt="mic" />
+    </div>
+</div>

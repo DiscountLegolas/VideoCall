@@ -1,0 +1,87 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+#videos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 300px;
+}
+
+.video-player {
+    width: 100%;
+    height: 200px;
+}
+#controls {
+    display:flex;
+    justify-content:center;
+    top:50%;
+    margin-top:25px;
+    margin: 0 auto;
+}
+.control{
+    background-color:mediumpurple;
+    padding:10px;
+    margin-left:10px;
+    cursor:pointer;
+    border-radius:50%;
+}
+    .control > img {
+        width: 100%;
+        height: 50px;
+    }
+.navbar-brand, .nav-link {
+    color: yellowgreen !important;
+}
+.enterform {
+    position: absolute;
+    width: 60%;
+    border-radius:5px;
+    margin: auto;
+}
+.enterform-header {
+    display: flex;
+    border-radius: 5px 5px 0px 0px;
+    background-color:forestgreen !important;
+    justify-content: center;
+    padding: 10px 0px 10px 0px;
+}
+.enterform>input{
+    background-color:dimgrey;
+    border-radius:5px;
+    width:95%;
+    margin:50px 5px 30px 5px;
+}
+.enterform-button {
+    background-color: forestgreen;
+    color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    width: 95%;
+    padding-top: 5px;
+    cursor:pointer;
+    padding-bottom: 5px;
+    margin: 0px 5px 30px 5px;
+}
+.enterform-header > p {
+    color: white;
+}
+.lobywrapper{
+    display:flex;
+    justify-content:center;
+}

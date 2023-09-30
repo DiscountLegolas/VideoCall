@@ -1,0 +1,21 @@
+﻿@page "/"
+@model VideoCall.Pages.LobbyModel
+@{
+}
+<div class="lobywrapper">
+    <form method="post" class="enterform" style="background-color:midnightblue">
+        <div class="enterform-header">
+            <p>Create Or Join Room</p>
+        </div>
+        <input type="text" id="roomidinput" name="roomid" />
+        <button type="submit"  class="enterform-button" onclick="gotoroom()">
+            <p style="margin-bottom:2px;">Enter Room</p>
+        </button>
+    </form>
+</div>
+<script type="text/javascript">
+    function gotoroom(){
+        const roomid=document.getElementById("roomidinput").value;
+        console.log(roomid)
+    }
+</script>
