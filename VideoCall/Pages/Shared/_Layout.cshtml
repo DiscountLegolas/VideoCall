@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/VideoCall.styles.css" asp-append-version="true" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" style="background-color:darkgreen;color:yellowgreen;margin-bottom:0px !important">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Lobby"><img src="~/89980497213b4df7a4e2e44f0475174b.png" alt="..." height="50" width="75"><span>Takıl</span></a>
+            <div id="takılnav" class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Lobby"><img src="~/89980497213b4df7a4e2e44f0475174b.png" alt="..." height="50" width="75"><span>Vidro</span></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -37,14 +39,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - VideoCall - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Styles", required: false)
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

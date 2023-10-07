@@ -8,9 +8,10 @@ namespace VideoCall.Pages
         public void OnGet()
         {
         }
-        public void OnPost()
-        {
-            Console.WriteLine(Request.Form["roomid"]);
+        public IActionResult OnPostAsync() {
+            Console.WriteLine(Request.Form["username"]);
+            HttpContext.Session.SetString("username", Request.Form["username"]);
+           return RedirectToPage("/Index", new { room = Request.Form["roomid"] });
         }
     }
 }

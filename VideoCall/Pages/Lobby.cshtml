@@ -2,20 +2,47 @@
 @model VideoCall.Pages.LobbyModel
 @{
 }
+@if (TempData["RoomError"]!=null)
+{
+    <div id="errormodal" class="modal" tabindex="-1" role="dialog">
+<div class="modal-dialog" role="document" >
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p style="color:black">You Should Provide Username and Roomname</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  </div>
+</div>
+</div>
+</div>
+}
 <div class="lobywrapper">
     <form method="post" class="enterform" style="background-color:midnightblue">
         <div class="enterform-header">
             <p>Create Or Join Room</p>
         </div>
-        <input type="text" id="roomidinput" name="roomid" />
-        <button type="submit"  class="enterform-button" onclick="gotoroom()">
-            <p style="margin-bottom:2px;">Enter Room</p>
-        </button>
+        <div class="lobywrapperflex">
+            <input type="text" id="roomidinput" name="roomid" placeholder="Room Name" />
+        </div>
+        <div class="lobywrapperflex">
+            <input type="text" id="usernameinput" name="username" placeholder="User Name" />
+        </div>
+        <div class="lobywrapperflex">
+            <button type="submit" class="enterform-button" onclick="gotoroom()">
+                <p style="margin-bottom:2px;">Enter Room</p>
+            </button>
+        </div>
+
     </form>
 </div>
-<script type="text/javascript">
-    function gotoroom(){
-        const roomid=document.getElementById("roomidinput").value;
-        console.log(roomid)
-    }
+<script>
+    $(document).ready(function () {
+        $('#errormodal').modal('show');
+    });
 </script>

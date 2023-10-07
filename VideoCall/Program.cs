@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
-
+builder.Services.AddSession();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
         });
 });
 var app = builder.Build();
-
+app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

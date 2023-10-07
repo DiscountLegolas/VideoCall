@@ -3,50 +3,120 @@
 
 // Write your JavaScript code.
 const roomname = location.pathname.split('/')[2]
-console.log(roomname)
+let screenshare = false;
+let screenstream;
+let screencall;
+let username = document.getElementById("username").innerText;
+console.log(username)
 let connection = new signalR.HubConnectionBuilder()
     .withUrl("/rtcHub")
     .configureLogging(signalR.LogLevel.Information)
     .build();
 connection.start()
 let pid;
-const videoGrid = document.getElementById('videos')
+let displayframe = document.getElementById('stream__box')
 const myPeer = new Peer()
 const myVideo = document.createElement('video')
 const peers = {}
+
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
 }).then(stream => {
-    addVideoStream(myVideo, stream)
+    addVideoStream(myVideo, stream, pid)
     myPeer.on('call', call => {
+        if (!Array.isArray(peers[call.peer])) {
+            peers[call.peer]=[]
+        }
+        peers[call.peer].push(call)
         call.answer(stream)
         const video = document.createElement('video')
         call.on('stream', userVideoStream => {
-            console.log("streaming")
-            addVideoStream(video, userVideoStream)
+            addVideoStream(video, userVideoStream, call.peer)
+        })
+        call.on('close', () => {
+            console.log("fsfs")
+            video.remove()
+            if (displayframe.getAttribute("data-id") === call.peer) {
+                displayframe.children[0].remove();
+            }
         })
     })
-    connection.on("UserJoined", (id, clid) => {
-        console.log("user joined")
-        connectToNewUser(id,clid, stream)
+    connection.on("Greeted", (username) => {
+
+        addtousers(username)
     });
-    connection.on("UserLeaved", (id, clid) => {
+    connection.on("UserJoined", (id, clid, ausername) => {
+        addtousers(ausername)
+        greet(ausername)
+        connectToNewUser(id, clid, stream)
+        connection.invoke("Greet", username,clid)
+            .then(() => {
+            })
+            .catch((error) => {
+                console.error('Error sending beforeunload signal:', error);
+            });
+    });
+    connection.on("UserLeaved", (id, clid, ausername) => {
+        removefromusers(ausername)
         if (peers[id]) {
-            peers[id].close()
+            for (var i in peers[id]) {
+                peers[id][i].close()
+            }
         }
-        if (peers[clid]) {
-            peers[clid].close()
-        }
-    });
-    document.getElementById("camera").onclick = () => {
-        let videotrack = stream.getTracks().find(track => track.kind === 'video')
-        videotrack.enabled = !videotrack.enabled;
-        if (videotrack.enabled) {
-            document.getElementById("camera").style.backgroundColor = "mediumpurple";
+        else if (peers[clid]) {
+            for (var i in peers[clid]) {
+                peers[id][i].close()
+            }
         }
         else {
-            document.getElementById("camera").style.backgroundColor = "red";
+            console.log("error")
+        }
+
+    });
+    document.getElementById("camera").onclick = ()=>cameramicclick("camera", "video", stream)
+    document.getElementById("mic").onclick = () => cameramicclick("mic", "audio", stream)
+    document.getElementById("record").onclick = async () => {
+        let sst = await navigator.mediaDevices.getDisplayMedia();
+        const recorder = new MediaRecorder(sst);
+
+        const chunks = [];
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.start();
+        recorder.onstop = e => {
+            const completeBlob = new Blob(chunks, { type: chunks[0].type });
+            const downloadLink = document.createElement("a");
+            downloadLink.href = URL.createObjectURL(completeBlob);
+            downloadLink.download = "screen-recording.webm";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        };
+    }
+    document.getElementById("screen_share").onclick = async () => {
+        if (!screenshare) {
+            screenstream = await navigator.mediaDevices.getDisplayMedia();
+            screenshare = !screenshare
+            /*
+            const screenvideo = document.createElement('video')
+            addVideoStream(screenvideo, screenstream, pid)*/
+            for (var i in peers) {
+                screencall = myPeer.call(i, screenstream)
+            }
+            screenstream.onended = () => {
+                screencall.close()
+                screenshare = !screenshare
+                document.getElementById("screen_share").style.backgroundColor = "";
+                screencall.close()
+            };
+            document.getElementById("screen_share").style.backgroundColor = "mediumpurple";
+        }
+        else {
+            screencall.close()
+            document.getElementById("screen_share").style.backgroundColor = "";
+            var tracks = screenstream.getTracks();
+            for (var i = 0; i < tracks.length; i++) tracks[i].stop();
+            screencall.close()
         }
     }
     document.getElementById("mic").onclick = () => {
@@ -62,7 +132,7 @@ navigator.mediaDevices.getUserMedia({
 })
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
-    connection.invoke("LeaveRoom", pid, roomname)
+    connection.invoke("LeaveRoom", pid, roomname, username)
         .then(() => {
         })
         .catch((error) => {
@@ -71,30 +141,25 @@ window.addEventListener('beforeunload', function (e) {
 });
 myPeer.on('open', id => {
     pid = id;
-    connection.invoke("JoinRoom", id, roomname);
+    connection.invoke("JoinRoom", id, roomname,username);
 })
-function connectToNewUser(id,userId, stream) {
-    const call = myPeer.call(id, stream)
+async function connectToNewUser(id, userId, stream) {
+    const call = myPeer.call(id, stream)        
+    if (screenshare) {
+        screencall=myPeer.call(id, screenstream)
+    }
     const video = document.createElement('video')
     call.on('stream', userVideoStream => {
-        addVideoStream(video, userVideoStream)
+        addVideoStream(video, userVideoStream,id)
     })
     call.on('close', () => {
         video.remove()
+        if (displayframe.getAttribute("data-id") === id) {
+            displayframe.children[0].remove();
+        }
     })
-
-    peers[userId] = call
+    if (!Array.isArray(peers[id])) {
+        peers[id] = []
+    }
+    peers[id].push(call)
 }
-
-function addVideoStream(video, stream) {
-    video.muted = true
-    video.setAttribute("class","video-player")
-    video.setAttribute("playsinline", "true");
-    video.srcObject = stream
-    video.addEventListener('loadedmetadata', () => {
-        video.play()
-    })
-    videoGrid.append(video)
-}
-
-
