@@ -19,13 +19,11 @@ namespace VideoCall.SignalRtc
         }
         public async Task ExpandFrame(string roomname,string id)
         {
-            Console.WriteLine(id);
             string clid = Context.ConnectionId;
             await Clients.GroupExcept(roomname, new List<string> { clid }).SendAsync("UserExpanded",id);
         }
         public async Task LeaveRoom(string id, string roomname, string username)
         {
-            Console.WriteLine(roomname);
             string clid = Context.ConnectionId;
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomname);
             await Clients.GroupExcept(roomname, new List<string> { clid }).SendAsync("UserLeaved", id, clid,username);

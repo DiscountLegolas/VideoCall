@@ -1,73 +1,102 @@
-﻿@page "Chat/{room}"
-@model IndexModel
+﻿@page "/"
+@model VideoCall.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
 }
-@section Scripts {
-    <script src="~/js/unpkg.com_peerjs@1.5.0_dist_peerjs.min.js"></script>
-    <script src="~/js/room.js" asp-append-version="true"></script>
-    <script src="~/js/Controls.js" asp-append-version="true"></script>
-    <script src="~/js/Helpers.js" asp-append-version="true"></script>
-}
-@section Styles {
-    <link rel="stylesheet" href="~/css/room.css" asp-append-version="true" />
-}
-<div id="main">
-    <span hidden id="username">@HttpContext.Session.GetString("username")</span>
-    <div id="room__container">
-        <section id="members__container">
-
-            <div id="members__header">
-                <p>Participants</p>
-                <strong id="members__count">1</strong>
+<link rel="stylesheet" href="~/css/Landing.css" />
+<!-- Hero Section -->
+<div class="px-4 py-5 my-5 text-center" id="hero">
+    <div class="col-lg-4 mx-auto" id="hero-text">
+        <div>
+            <h1 class="display-5 fw-bold">Vidroya hoşgeldiniz</h1>
+            <p style="font-size:medium" class="lead mb-4">Tek bir yerden sohbet etmek ve toplantı yapmak için hemen oturum açın.</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Join</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
             </div>
-
-            <div id="member__list">
-                <div class="member__wrapper" id="member__1__wrapper">
-                    <p class="member_name">@HttpContext.Session.GetString("username")</p>
-                </div>
-            </div>
-
-        </section>
-        <section id="stream__container">
-            <div id="stream__box"></div>
-
-            <div id="streams__container"></div>
-            <div class="stream__actions">
-                <button id="camera">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M5 4h-3v-1h3v1zm10.93 0l.812 1.219c.743 1.115 1.987 1.781 3.328 1.781h1.93v13h-20v-13h3.93c1.341 0 2.585-.666 3.328-1.781l.812-1.219h5.86zm1.07-2h-8l-1.406 2.109c-.371.557-.995.891-1.664.891h-5.93v17h24v-17h-3.93c-.669 0-1.293-.334-1.664-.891l-1.406-2.109zm-11 8c0-.552-.447-1-1-1s-1 .448-1 1 .447 1 1 1 1-.448 1-1zm7 0c1.654 0 3 1.346 3 3s-1.346 3-3 3-3-1.346-3-3 1.346-3 3-3zm0-2c-2.761 0-5 2.239-5 5s2.239 5 5 5 5-2.239 5-5-2.239-5-5-5z" /></svg>
-                </button>
-                <button id="mic">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2c1.103 0 2 .897 2 2v7c0 1.103-.897 2-2 2s-2-.897-2-2v-7c0-1.103.897-2 2-2zm0-2c-2.209 0-4 1.791-4 4v7c0 2.209 1.791 4 4 4s4-1.791 4-4v-7c0-2.209-1.791-4-4-4zm8 9v2c0 4.418-3.582 8-8 8s-8-3.582-8-8v-2h2v2c0 3.309 2.691 6 6 6s6-2.691 6-6v-2h2zm-7 13v-2h-2v2h-4v2h10v-2h-4z" /></svg>
-                </button>
-                <button id="screen_share">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 1v17h24v-17h-24zm22 15h-20v-13h20v13zm-6.599 4l2.599 3h-12l2.599-3h6.802z" /></svg>
-                </button>
-                <button>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 10v-5l8 7-8 7v-5h-8v-4h8zm-16-8v20h14v-2h-12v-16h12v-2h-14z" /></svg>
-                </button>
-                <button id="record">
-                    Record
-                </button>
-            </div>
-        </section>
-
-        <section id="messages__container">
-
-            <div id="messages">
-                <div class="message__wrapper">
-                    <div class="message__body__bot">
-                        <strong class="message__author__bot">🤖 Vidro Bot</strong>
-                        <p class="message__text__bot">Welcome to the room, Don't be shy, say hello!</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <form id="message__form">
-                <input type="text" name="message" placeholder="Send a message...." />
-            </form>
-
-        </section>
+        </div>
+    </div>
+    <div class="col-lg-6 banner">
+        <img src="~/vectorpage.png" alt="">
     </div>
 </div>
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container text-center">
+        <h1>Features</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Easy to Use</h2>
+                <p>Join a video conference with just a few clicks. No technical expertise required.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>High Quality Video</h2>
+                <p>Experience high-definition video quality for your meetings and presentations.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Secure and Private</h2>
+                <p>Your data is safe with us. We prioritize your privacy and security.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="bg-light py-5">
+    <div class="container text-center">
+        <h2>Choose a Plan</h2>
+        <p>Select the plan that best suits your needs.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Free Plan</h5>
+                        <p class="mb-2">
+                            <i class="mdi mdi-checkbox-marked-circle text-success f-18 mr-2"></i><b>Unlimited</b>
+                            Target Audience
+                        </p>
+                        <p class="mb-2">
+                            <i class="mdi mdi-checkbox-marked-circle text-success f-18 mr-2"></i><b>1</b>
+                            User Account
+                        </p>
+                        <p class="card-text">$0/month</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Pro Plan</h5>
+                        <p class="card-text">Advanced features</p>
+                        <p class="card-text">$19/month</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Contact Us</h2>
+                <p>If you have any questions or need assistance, feel free to get in touch with us.</p>
+            </div>
+            <div class="col-md-6">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="5" placeholder="Message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

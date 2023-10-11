@@ -4,7 +4,8 @@ let expandvideoframe = (e, id) => {
     displayframe.setAttribute("data-id", id)
     let videotoexpand = e.currentTarget.cloneNode(true);
     videotoexpand.style.height = "auto"
-    videotoexpand.style.width = "90%"
+    videotoexpand.style.width = "100%"
+    videotoexpand.style.margin= "0"
 
     videotoexpand.srcObject = e.currentTarget.srcObject;
     videotoexpand.addEventListener('loadedmetadata', () => {

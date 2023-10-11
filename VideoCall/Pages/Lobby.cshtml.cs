@@ -11,7 +11,7 @@ namespace VideoCall.Pages
         public IActionResult OnPostAsync() {
             Console.WriteLine(Request.Form["username"]);
             HttpContext.Session.SetString("username", Request.Form["username"]);
-           return RedirectToPage("/Index", new { room = Request.Form["roomid"] });
+            return RedirectToPage("/ChatRoom", new { room = Request.Form["roomid"] });
         }
     }
 }
