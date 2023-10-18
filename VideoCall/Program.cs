@@ -1,7 +1,18 @@
+using Microsoft.Extensions.Configuration;
+using VideoCall.Identity.Models;
+using VideoCall.Settings;
 using VideoCall.SignalRtc;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
+var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
+
+
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
+        (
+            mongoDbSettings.ConnectionString, mongoDbSettings.Name
+        );
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
@@ -32,6 +43,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors();

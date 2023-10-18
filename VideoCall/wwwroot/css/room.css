@@ -269,6 +269,13 @@
     object-fit: cover;
     width: 29%;
     margin: 10px;
+    border-radius: 10px;
+    height: 150px;
+}
+.video-player-talking {
+    object-fit: cover;
+    width: 29%;
+    margin: 10px;
     border: 2px solid yellowgreen;
     border-radius: 10px;
     height: 150px;

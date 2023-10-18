@@ -1,0 +1,15 @@
+﻿#errors ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+#errors ul li {
+        padding-left: 1em;
+        text-indent: -1em;
+    }
+
+    #errors ul li:before {
+        content: "X";
+        padding-right: 5px;
+    }

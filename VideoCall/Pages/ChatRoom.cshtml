@@ -1,7 +1,7 @@
-﻿@page "Chat/{room}"
-@model IndexModel
+﻿@page "{room}"
+@model ChatRoomModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "ChatRoom";
 }
 @section Scripts {
     <script src="~/js/unpkg.com_peerjs@1.5.0_dist_peerjs.min.js"></script>
@@ -14,6 +14,16 @@
 }
 <div id="main">
     <span hidden id="username">@HttpContext.Session.GetString("username")</span>
+    @{
+        if (HttpContext.Session.GetString("username")==null)
+        {
+            <span hidden>null</span>
+        }
+        else
+        {
+            <span hidden>notnull</span>
+        }
+    }
     <div id="room__container">
         <section id="members__container">
 

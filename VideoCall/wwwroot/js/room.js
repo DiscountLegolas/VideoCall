@@ -5,9 +5,9 @@
 const roomname = location.pathname.split('/')[2]
 let screenshare = false;
 let screenstream;
+let users = [];
 let screencall;
 let username = document.getElementById("username").innerText;
-console.log(username)
 let connection = new signalR.HubConnectionBuilder()
     .withUrl("/rtcHub")
     .configureLogging(signalR.LogLevel.Information)
@@ -23,6 +23,7 @@ navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
 }).then(stream => {
+
     addVideoStream(myVideo, stream, pid)
     myPeer.on('call', call => {
         if (!Array.isArray(peers[call.peer])) {
@@ -42,29 +43,36 @@ navigator.mediaDevices.getUserMedia({
             }
         })
     })
-    connection.on("Greeted", (username) => {
 
-        addtousers(username)
+    connection.on("Greeted", (ausername) => {
+        if (!users.includes(ausername)) {
+            users.push(ausername)
+        }
+        addtousers(ausername)
     });
     connection.on("UserJoined", (id, clid, ausername) => {
-        addtousers(ausername)
-        greet(ausername)
-        connectToNewUser(id, clid, stream)
-        connection.invoke("Greet", username,clid)
-            .then(() => {
-            })
-            .catch((error) => {
-                console.error('Error sending beforeunload signal:', error);
-            });
+        if (!users.includes(ausername)) {
+            users.push(ausername)
+            addtousers(ausername)
+            greet(ausername)
+            connectToNewUser(id, clid, stream)
+            connection.invoke("Greet", username, clid)
+                .then(() => {
+                })
+                .catch((error) => {
+                    console.error('Error sending beforeunload signal:', error);
+                });
+        }
     });
     connection.on("UserLeaved", (id, clid, ausername) => {
-        removefromusers(ausername)
         if (peers[id]) {
+            removefromusers(ausername)
             for (var i in peers[id]) {
                 peers[id][i].close()
             }
         }
         else if (peers[clid]) {
+            removefromusers(ausername)
             for (var i in peers[clid]) {
                 peers[id][i].close()
             }
@@ -94,6 +102,7 @@ navigator.mediaDevices.getUserMedia({
         };
     }
     document.getElementById("screen_share").onclick = async () => {
+        console.log(screenshare)
         if (!screenshare) {
             screenstream = await navigator.mediaDevices.getDisplayMedia();
             screenshare = !screenshare
@@ -112,7 +121,7 @@ navigator.mediaDevices.getUserMedia({
             document.getElementById("screen_share").style.backgroundColor = "mediumpurple";
         }
         else {
-            screencall.close()
+            screencall = !screencall
             document.getElementById("screen_share").style.backgroundColor = "";
             var tracks = screenstream.getTracks();
             for (var i = 0; i < tracks.length; i++) tracks[i].stop();
@@ -130,6 +139,11 @@ navigator.mediaDevices.getUserMedia({
         }
     }
 })
+myPeer.on('open', id => {
+    pid = id;
+    users.push(username)
+    connection.invoke("JoinRoom", id, roomname, username);
+})
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
     connection.invoke("LeaveRoom", pid, roomname, username)
@@ -139,10 +153,6 @@ window.addEventListener('beforeunload', function (e) {
             console.error('Error sending beforeunload signal:', error);
         });
 });
-myPeer.on('open', id => {
-    pid = id;
-    connection.invoke("JoinRoom", id, roomname,username);
-})
 async function connectToNewUser(id, userId, stream) {
     const call = myPeer.call(id, stream)        
     if (screenshare) {
