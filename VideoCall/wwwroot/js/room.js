@@ -6,6 +6,7 @@ const roomname = location.pathname.split('/')[2]
 let screenshare = false;
 let screenstream;
 let users = [];
+let enddate ='@HttpContext.Session.GetString("roomenddatetime")'
 let screencall;
 let username = document.getElementById("username").innerText;
 let connection = new signalR.HubConnectionBuilder()
@@ -49,6 +50,21 @@ navigator.mediaDevices.getUserMedia({
             users.push(ausername)
         }
         addtousers(ausername)
+    });
+    connection.on("ReceiveMessage", (ausername, amessage) => {
+        let messages = document.getElementById('messages')
+        let newmessage = `<div class="message__wrapper">
+        <div class="message__body">
+        <strong class="message__author">${ausername}</strong>
+        <p class="message__text">${amessage}</p>
+        </div>
+        </div>
+        `
+        messages.insertAdjacentHTML("beforeend", newmessage)
+        let lastmessage = document.querySelector("#messages .message__wrapper:last-child")
+        if (lastmessage) {
+            lastmessage.scrollIntoView()
+        }
     });
     connection.on("UserJoined", (id, clid, ausername) => {
         if (!users.includes(ausername)) {
@@ -102,7 +118,6 @@ navigator.mediaDevices.getUserMedia({
         };
     }
     document.getElementById("screen_share").onclick = async () => {
-        console.log(screenshare)
         if (!screenshare) {
             screenstream = await navigator.mediaDevices.getDisplayMedia();
             screenshare = !screenshare
@@ -144,14 +159,18 @@ myPeer.on('open', id => {
     users.push(username)
     connection.invoke("JoinRoom", id, roomname, username);
 })
-window.addEventListener('beforeunload', function (e) {
+window.addEventListener('unload', function (e) {
     e.preventDefault();
     connection.invoke("LeaveRoom", pid, roomname, username)
         .then(() => {
         })
         .catch((error) => {
-            console.error('Error sending beforeunload signal:', error);
+            console.error('Error sending unload signal:', error);
         });
+});
+$('#message__form').submit(function () {
+    connection.invoke("SendingMessage", roomname, username, $('#message_text').val());
+    return false;
 });
 async function connectToNewUser(id, userId, stream) {
     const call = myPeer.call(id, stream)        

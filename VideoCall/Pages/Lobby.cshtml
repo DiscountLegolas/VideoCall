@@ -2,7 +2,9 @@
 @model VideoCall.Pages.LobbyModel
 @{
     ViewData["Title"] = "Lobby";
-
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Lobby.css" asp-append-version="true" />
 }
 @if (TempData["RoomError"]!=null)
 {
@@ -33,15 +35,16 @@
             <input type="text" id="roomidinput" name="roomid" placeholder="Room Name" />
         </div>
         <div class="lobywrapperflex">
-            <input type="text" id="usernameinput" name="username" placeholder="User Name" />
-        </div>
-        <div class="lobywrapperflex">
             <button type="submit" class="enterform-button" onclick="gotoroom()">
                 <p style="margin-bottom:2px;">Enter Room</p>
             </button>
         </div>
 
     </form>
+</div>
+<div id="footerwrapper">
+    <img src="~/lobby1.png" alt="" class="footerpic">
+    <img src="~/lobby2.png" alt="" class="footerpic">
 </div>
 <script>
     $(document).ready(function () {

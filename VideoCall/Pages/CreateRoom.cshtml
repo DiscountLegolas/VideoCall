@@ -1,0 +1,136 @@
+﻿@page
+@{
+    ViewData["Title"] = "Create Room";
+    int max = 1;
+    var userisinrole = HttpContext.User.IsInRole("PremiumUser");
+    if (userisinrole)
+    {
+        max = 30;
+    }
+}
+
+@model VideoCall.Pages.CreateRoomModel
+@section Styles {
+    <link rel="stylesheet" href="~/css/CreateRoom.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+}
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment-with-locales.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datetimepicker').datetimepicker({
+                locale: 'tr',
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+        });
+    </script>
+}
+<div class="container mt-5 page">
+    <form class="custom-form needs-validation" novalidate>
+        @Html.AntiForgeryToken()
+        <h2>Create a Zoom Meeting</h2>
+        <div class="form-group" style="width:50%">
+            <label for="meetingTopic">Meeting Topic:</label>
+            <input type="text" class="form-control" id="meetingTopic" name="meetingTopic" placeholder="Enter Meeting Topic" required>
+            <div class="invalid-feedback">
+                Konu Giriniz.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="meetingDate">Date:</label>
+            <div class="date">
+                from
+                <div>
+                    <input id="datetimepicker" class="form-control" name="begindatetime" type="text" required />
+                    <div class="invalid-feedback">
+                        Tarih Giriniz.
+                    </div>
+                </div>
+                Duration (in hours):
+                <div>
+                    <input type="number" step="0.01" class="form-control" id="time" name="time" max="@max" min="0" onkeyup=enforceMinMax(this) onchange=enforceMinMax(this) required>
+                    <div class="invalid-feedback">
+                        Saat Giriniz.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="width:50%">
+            <label for="meetingPassword">Password:</label>
+            <input type="text" class="form-control" id="meetingPassword" name="meetingPassword" placeholder="Enter Password">
+        </div>
+        <button type="button" id="formbutton" class="btn btn-primary btn-block" style="width:50%">Create Meeting</button>
+    </form>
+</div>
+<style>
+    .was-validated .form-control:valid {
+        background-image: none;
+        border-color: #ccc;
+    }
+
+
+    .was-validated .form-control:invalid {
+        background-image: none;
+        border-color: #ccc;
+    }
+    .navbar-brand{
+        display:flex;
+        align-items:center;
+        text-align:center;
+        height:auto;
+        padding:0px !important;
+    }
+    
+</style>
+<script type="text/javascript">
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                document.getElementById("formbutton").addEventListener('click', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    else {
+                        var createroom = { "Topic": $('#meetingTopic').val(), "Begindate": $('#datetimepicker').val(), "Pass": $('#meetingPassword').val(), "Time": $('#time').val() }
+                        $.ajax({
+                            type: "POST",
+                            url: "/CreateRoom?handler=CreateRoom",
+                            data: JSON.stringify(createroom),
+                            headers: {
+                                RequestVerificationToken:
+                                    $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                alert(data)
+                            },
+                            error: function (error) {
+                                console.error(error);
+                            }
+                        });
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+    function enforceMinMax(el) {
+        var max = '@max';
+        if (el.value != "") {
+            if (parseFloat(el.value) < 0) {
+                el.value = el.min;
+            }
+            if (parseFloat(el.value) > parseFloat(max)) {
+                el.value = max;
+            }
+        }
+    }
+</script>

@@ -12,6 +12,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/room.css" asp-append-version="true" />
 }
+@Html.AntiForgeryToken()
 <div id="main">
     <span hidden id="username">@HttpContext.Session.GetString("username")</span>
     @{
@@ -75,7 +76,7 @@
             </div>
 
             <form id="message__form">
-                <input type="text" name="message" placeholder="Send a message...." />
+                <input type="text" name="message" id="message_text" placeholder="Send a message...." />
             </form>
 
         </section>

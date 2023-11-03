@@ -15,7 +15,6 @@
         const audioLevel = getAverage(dataArray); // Calculate the average audio level
 
         // Use audioLevel as needed
-        console.log('Audio Level:', audioLevel);
         if (audioLevel > 50) {
             video.setAttribute("class", "video-player-talking")
         }

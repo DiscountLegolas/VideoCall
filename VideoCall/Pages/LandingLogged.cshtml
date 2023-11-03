@@ -1,0 +1,18 @@
+﻿@page
+@model VideoCall.Pages.LandingLoggedModel
+@{
+}
+<div class="container">
+    <h2>Hello, @HttpContext.User.Identity!.Name!</h2>
+    <p>Welcome to VideoCallSite, your platform for seamless video communication.</p>
+    <p>Here are some options you can explore:</p>
+    <ul>
+        <li>Schedule a video call with your contacts.</li>
+        <li>Join an existing video call meeting.</li>
+        <li>View your call history and manage settings.</li>
+    </ul>
+    <p>Click the button below to get started:</p>
+    <a class="btn" href="/schedule-call">Schedule a Call</a>
+    <a class="btn" href="/join-call">Join a Call</a>
+    <a class="btn" href="/call-history">Call History</a>
+</div>

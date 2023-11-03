@@ -1,0 +1,69 @@
+﻿html, body {
+    overflow: auto;
+    height:100%;
+}
+#footerwrapper {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-left:10px;
+    margin-right:10px;
+}
+.footerpic{
+    height:250px;
+}
+.enterform {
+    justify-content: center;
+    width: 50%;
+    border-radius: 5px;
+    margin: auto;
+    padding-bottom: 10px;
+}
+
+.enterform-header {
+    display: flex;
+    border-radius: 5px 5px 0px 0px;
+    background-color: forestgreen !important;
+    justify-content: center;
+    padding: 10px 0px 10px 0px;
+}
+
+.lobywrapperflex > input {
+    background-color: dimgrey;
+    border-radius: 5px;
+    width: 50%;
+    padding: 10px 0px 10px 10px;
+    margin: 20px 5px 20px 5px;
+}
+
+    .lobywrapperflex > input::placeholder {
+        color: white;
+    }
+
+.enterform-button {
+    background-color: forestgreen;
+    color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    width: 95%;
+    padding-top: 5px;
+    cursor: pointer;
+    padding-bottom: 5px;
+    margin: 0px 5px 30px 5px;
+}
+
+.enterform-header > p {
+    color: white;
+}
+
+.lobywrapper {
+    margin-top: 50px;
+}
+
+.lobywrapperflex {
+    display: flex;
+    justify-content: center;
+}

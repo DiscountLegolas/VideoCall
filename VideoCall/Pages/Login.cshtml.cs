@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using VideoCall.Identity.Models;
 using VideoCall.PageModels;
+using VideoCall.Settings;
 
 namespace VideoCall.Pages
 {
-    [AllowAnonymous]
-    [ValidateAntiForgeryToken]
+    [AllowOnlyAnonymus]
     public class LoginModel : PageModel
     {
         private UserManager<ApplicationUser> userManager;
@@ -24,7 +24,6 @@ namespace VideoCall.Pages
         }
         [BindProperty]
         public LoginUser? user { get; set; }
-
         public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
@@ -33,23 +32,23 @@ namespace VideoCall.Pages
                 ApplicationUser appUsername = await userManager.FindByNameAsync(user.UserNameOrEmail);
                 if (appUseremail != null)
                 {
-                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUseremail, user.Password, false, false);
+                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUseremail, user.Password, true, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToPage();
+                        return RedirectToPage("Index");
                     }
                 }
                 if (appUsername!=null)
                 {
-                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUsername, user.Password, false, false);
+                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUsername, user.Password, true, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToPage();
+                        return RedirectToPage("Index");
                     }
                 }
                 ModelState.AddModelError(nameof(user.UserNameOrEmail), "Login Failed: Invalid Email or Password");
             }
-
+            Console.WriteLine();
             return Page();
         }
     }

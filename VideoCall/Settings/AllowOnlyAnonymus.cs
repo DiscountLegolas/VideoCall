@@ -4,20 +4,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace VideoCall.Settings
 {
-    public class AllowOnlyAnonymus: IAuthorizationFilter
+    public class AllowOnlyAnonymus: Attribute, IAuthorizationFilter
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public AllowOnlyAnonymus(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
-
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (_httpContextAccessor.HttpContext!.User.Identity!.IsAuthenticated)
+            if (context.HttpContext!.User.Identity!.IsAuthenticated)
             {
-                context.Result=new RedirectToPageResult("")
+                Console.WriteLine("aadad");
+                context.Result = new RedirectToPageResult("LandingLogged");
             }
         }
+
     }
 }

@@ -1,0 +1,16 @@
+﻿.page{
+    width:50%;
+}
+.date{
+    display:flex;
+    gap:10px;
+}
+div::after{
+    content:none !important;
+}
+div::before {
+    content: none !important;
+}
+nav::before{
+    content:none !important;
+}
